@@ -1,5 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <WiFiClientSecure.h>
+
 #include "webpage.h";
 #include "httpmanager.h";
 // Wifi Name
@@ -64,6 +66,8 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
   if(WiFi.status() == WL_CONNECTED){
+    
+    
   server.handleClient();
   if(tokenRecieved != ""){
     call_sleep_summary(tokenRecieved);

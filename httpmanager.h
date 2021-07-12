@@ -1,17 +1,21 @@
 #define ARDUINOJSON_USE_LONG_LONG 1
 #include <ESP8266HTTPClient.h>
-#include <WiFiClient.h>
 
 //Include Arduino Json library
 #include <ArduinoJson.h>
 
+const int httpsPort = 443;
 // Withings http calls 
 WiFiClient wificlient;
 //sleep - GET
 void call_sleep_summary(String token){
   HTTPClient https;
+
+  WiFiClientSecure wclient;
+  wclient.setInsecure();
+
   Serial.println(" HTTP POST...");
-  https.begin(wificlient,"http://192.168.0.122/troubleshoot/troubleshoot/app/api/");
+  https.begin(wclient,"https://customaticparts.com/servicePortal/app/api/");
     https.addHeader("Content-Type",  "application/x-www-form-urlencoded");
 
     //create json request
@@ -52,14 +56,39 @@ void call_sleep_summary(String token){
   }
   else{
   }
+
+  /*"
+   * 
+   * SAMPLE OUTPUT FROM API 
+   * {\"wakeupduration\":1680,
+   * \"wakeupcount\":3,
+   * \"durationtosleep\":1500,
+   * \"remsleepduration\":5160,
+   * \"durationtowakeup\":0,
+   * \"total_timeinbed\":25380,
+   * \"total_sleep_time\":23700,
+   * \"sleep_efficiency\":0.93000000000000004884981308350688777863979339599609375,
+   * \"sleep_latency\":1500,
+   * \"wakeup_latency\":0,
+   * \"waso\":-7560,
+   * \"nb_rem_episodes\":4,
+   * \"out_of_bed_count\":3,
+   * \"lightsleepduration\":11520,
+   * \"deepsleepduration\":7020}"
+   */
   int sleepDuration = doc["asleepduration"];
   int snoring = doc["snoring"];
   int sleepScore = doc["sleep_score"];
   int sleepEff = doc["sleep_efficiency"];
 
-  Serial.println("")
-  
- Serial.println(doc);
+  Serial.print("Sleep Duration: ");
+  Serial.println(sleepDuration);
+  Serial.print(" Snoring: ");
+  Serial.println(snoring);
+  Serial.print(" Sleep Score: ");
+  Serial.println(sleepScore);
+   Serial.print(" SleepEff: ");
+  Serial.println(sleepEff);
 
     https.end();
   }
