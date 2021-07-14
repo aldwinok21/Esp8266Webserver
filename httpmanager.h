@@ -41,11 +41,10 @@ void call_sleep_summary(String token){
 
   /* Deserialized the json object*/
   // Change Memory size if json data is too large.
-  StaticJsonDocument<800> doc;
-    String json = payload;
-
+  DynamicJsonDocument doc(500);
+  
     // Deserialize the JSON document
-  DeserializationError error = deserializeJson(doc, json);
+  DeserializationError error = deserializeJson(doc, payload);
 
   // Test if parsing succeeds.
   if (error) {
@@ -76,17 +75,17 @@ void call_sleep_summary(String token){
    * \"lightsleepduration\":11520,
    * \"deepsleepduration\":7020}"
    */
-  int sleepDuration = doc["asleepduration"];
-  int snoring = doc["snoring"];
-  int sleepScore = doc["sleep_score"];
-  int sleepEff = doc["sleep_efficiency"];
+  long sleepDuration = doc["deepsleepduration"].as<long>();
+  int wakeupCount = doc["wakeupcount"].as<int>();
+  int snoring = doc["snoring"].as<int>();
+  float sleepEff = doc["sleep_efficiency"].as<float>();
 
+    Serial.print("Wake up count: ");
+  Serial.println(wakeupCount);
   Serial.print("Sleep Duration: ");
   Serial.println(sleepDuration);
   Serial.print(" Snoring: ");
   Serial.println(snoring);
-  Serial.print(" Sleep Score: ");
-  Serial.println(sleepScore);
    Serial.print(" SleepEff: ");
   Serial.println(sleepEff);
 
